@@ -1,18 +1,21 @@
 {
   "expo": {
     "name": "CatPol",
-    "description":"Codificats Policials de Catalunya",
+    "description": "Codificats Policials de Catalunya",
     "slug": "Catpol",
     "version": "1.0.0",
-    "platforms": ["ios","android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "orientation": "portrait",
-    "backgroundColor":"#696963",
+    "backgroundColor": "#696963",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon-512x512.png",
-    "newArchEnabled": true, 
-    "notification":{
+    "newArchEnabled": true,
+    "notification": {
       "icon": "./assets/icon-96x96.png"
-      },
+    },
     "splash": {
       "image": "./assets/icon-512x512.png",
       "resizeMode": "native",
@@ -29,6 +32,9 @@
     },
     "web": {
       "favicon": "./assets/favicon-32x32.png"
-    }
+    },
+    "plugins": [
+      "expo-sqlite"
+    ]
   }
 }

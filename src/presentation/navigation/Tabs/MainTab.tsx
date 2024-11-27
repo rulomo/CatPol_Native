@@ -10,6 +10,10 @@ import { CodificadosTab } from './TabScreens/CodificadosTab';
 import { TablasTab } from './TabScreens/TablasTab';
 import { CalendariTab } from './TabScreens/CalendariTab';
 
+
+import * as SQLite from 'expo-sqlite';
+
+
 //Icons
 function makeIconRender(name: keyof typeof MaterialCommunityIcons.glyphMap | undefined) {
   return ({ color, size }: { color: any, size: any }) => (
@@ -21,7 +25,6 @@ export const Tabs = ({ navigation, route }: any) => {
 
   const Tab = createBottomTabNavigator();
   const { colors } = useTheme() as unknown as IAppTheme;
-
 
   return (
     <Tab.Navigator

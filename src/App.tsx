@@ -13,6 +13,7 @@ import AppDarkTheme from './presentation/theme/appDarkThem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import useSettingsContext, { SettingsContextProvider } from './contexts/SettingsContext';
+import { SQLiteProvider } from 'expo-sqlite';
 
 
 const getDataTheme = async () => {
@@ -30,7 +31,7 @@ const getDataTheme = async () => {
 export default function App() {
 
   const colorScheme = useColorScheme();
-  const {setContextTheme}=useSettingsContext();
+  const { setContextTheme } = useSettingsContext();
 
   useEffect(() => {
     getDataTheme()
@@ -39,7 +40,7 @@ export default function App() {
 
   const selectTheme: IAppTheme = colorScheme === 'light'
     ? AppLightTheme : AppDarkTheme;
-  
+
 
 
   const paperTheme = {
@@ -49,13 +50,15 @@ export default function App() {
 
   return (
     <PaperProvider theme={paperTheme}>
-      <SettingsContextProvider>
-        <NavigationContainer
-          theme={selectTheme}
-        >
-          <MainStackNavigator />
-        </NavigationContainer>
-      </SettingsContextProvider>
+      <SQLiteProvider databaseName="dba.db" assetSource={{ assetId: require('../assets/dba.db') }}>
+        <SettingsContextProvider>
+          <NavigationContainer
+            theme={selectTheme}
+          >
+            <MainStackNavigator />
+          </NavigationContainer>
+        </SettingsContextProvider>
+      </SQLiteProvider>
     </PaperProvider>
 
   );
