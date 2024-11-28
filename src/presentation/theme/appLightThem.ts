@@ -22,7 +22,7 @@ const AppLightTheme: IAppTheme = {
         drawerText: '#353333ad',
         borderCardActive: '#313131',
         borderCard: '#eee',
-        backgroundCard: '#50504c',
+        backgroundCard: '#d1d1d1',
         greyBorder: '#d1d1d1',
         borderHovertileBar: '#8a8a8a',
         backGroundTitleBar: 'grey',

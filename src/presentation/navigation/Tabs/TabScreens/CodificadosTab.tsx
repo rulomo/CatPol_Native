@@ -3,71 +3,91 @@ import { View, Text, StyleSheet, Image, useColorScheme, ListRenderItemInfo, Touc
 import { useSQLiteContext } from 'expo-sqlite';
 import { ICity } from '../../../../interfaces';
 import { FlatList } from 'react-native-gesture-handler';
-import { Button, Card, Paragraph, Title } from 'react-native-paper';
+import { Button, Card, Divider, Paragraph, Title } from 'react-native-paper';
 
-import * as ESCUDOS  from '../../../../../assets/escudos'
+import * as ESCUDOS from '../../../../../assets/escudos'
+import CardContent from 'react-native-paper/lib/typescript/components/Card/CardContent';
 
 export const CodificadosTab = () => {
     const { colors } = useTheme() as unknown as IAppTheme;
     const theme = useColorScheme();
 
-
     const db = useSQLiteContext();
     const prueba: ICity[] = db.getAllSync('SELECT * from cities')
-console.log(prueba)
 
     return (
 
         <FlatList
             data={prueba}
             renderItem={({ item }: ListRenderItemInfo<ICity>) => (
-                <TouchableHighlight
-                    key={item.id}
-                // onPress={() => }
-                // onShowUnderlay={separators.highlight}
-                // onHideUnderlay={separators.unhighlight}
+
+                <Card 
+                    style={[styles.card, { backgroundColor: colors.backgroundCard, }]}
+                    accessible
                 >
-                    <Card style={{backgroundColor:colors.backgroundCard}}>
-                        {/* {console.log(item.img)} */}
-                        <Card.Content>                            
-                            <Image
-                                style={styles.tinyLogo}
-                                source={ESCUDOS[`catdalunya`]}
-                            />
-                            <Title>{item.img}</Title>
-                            <Paragraph>Card content</Paragraph>
-                        </Card.Content>                       
-                        <Card.Actions>
-                            <Button>Cancel</Button>
-                            <Button>Ok</Button>
-                        </Card.Actions>
-                        <Card.Title title="Card Title" subtitle="Card Subtitle" />
-                    </Card>
-                </TouchableHighlight>
+                    {/* {console.log(item.img)} */}
+                    <Card.Content style={[styles.cardContent]}>
+                        <Image
+                            style={styles.imagen}
+                            source={ESCUDOS[`${item.img as keyof typeof ESCUDOS}`]
+                            }
+                        />
+
+
+
+                    </Card.Content>
+                    <Card.Content style={styles.bottom}>
+                        <Title style={[styles.title, { color: colors.text }]}>
+                            {item.img}
+                        </Title>
+                    </Card.Content>
+                </Card >
             )}
             keyExtractor={(item: ICity) => `${item.id}`}
             numColumns={2}
+            contentContainerStyle={styles.flStyle}            
         >
 
-        </FlatList>
+        </FlatList >
 
 
 
     )
 }
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
+    flStyle: {
+        flexGrow: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: 'blue',
+        shadowOpacity: 1
     },
-    tinyLogo: {
-      width: 150,
-      height: 150,
+    card: {
+        margin: 10,
+        width: 150,
+        borderWidth: 3,        
+    },    
+    cardContent: {
+        width: 100,
+        display: 'flex',
+        height: 160,
+
     },
-    logo: {
-      width: 66,
-      height: 58,
+    imagen: {
+        width: 115,
+        height: 140,
+        resizeMode: 'contain',
     },
-  });
+    bottom: {
+        borderTopWidth: 2,
+        alignItems: 'center'
+    },
+    title: {
+        fontWeight: 600,
+        textTransform: 'capitalize'
+    }
+
+});
 
 
 
