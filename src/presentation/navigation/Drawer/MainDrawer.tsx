@@ -10,7 +10,7 @@ export default function MainDrawer() {
   return (
 
     <Drawer.Navigator
-      initialRouteName="Principal"      
+      initialRouteName="Principal"
       screenOptions={{
         drawerLabelStyle: {
           fontSize: 15,
@@ -19,19 +19,19 @@ export default function MainDrawer() {
         },
 
       }}
-      drawerContent={props => <CustomSidebarMenu {...props}  />}
-    >      
+      drawerContent={props => <CustomSidebarMenu {...props} />}
+    >
       <Drawer.Screen
         name="Principal"
         component={Tabs}
-        options={() => ({          
+        options={() => ({
           title: 'Codificats',
           drawerItemStyle: {
             display: 'none'
           }  //Principal de Tabs que no lo muestre en el Drawer          
         })}
-        />        
-      
+      />
+
     </Drawer.Navigator>
   )
 }

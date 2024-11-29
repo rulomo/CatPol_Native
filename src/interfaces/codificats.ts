@@ -1,4 +1,4 @@
-export interface Codificat {
+export interface ICodificats {
     id:               number;
     id_city:          number;
     name_cod:         string;

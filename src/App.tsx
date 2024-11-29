@@ -13,8 +13,7 @@ import AppDarkTheme from './presentation/theme/appDarkThem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import useSettingsContext, { SettingsContextProvider } from './contexts/SettingsContext';
-import { SQLiteProvider } from 'expo-sqlite';
-
+import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
 
 const getDataTheme = async () => {
   try {
@@ -29,6 +28,7 @@ const getDataTheme = async () => {
 };
 
 export default function App() {
+
 
   const colorScheme = useColorScheme();
   const { setContextTheme } = useSettingsContext();

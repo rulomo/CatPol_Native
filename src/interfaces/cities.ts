@@ -6,7 +6,6 @@ export interface ICity {
     img:        string;
     is_default: boolean;
     created_at: Date;
-    is_select: boolean;
-    codificats: Codificat[];
+    order:number;        
 }
 
