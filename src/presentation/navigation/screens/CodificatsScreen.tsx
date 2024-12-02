@@ -5,8 +5,11 @@ import { Button, View, Text, FlatList, ListRenderItemInfo, StyleSheet, Dimension
 import { ICodificats, IOrdenanca, OrdenancaStandard } from "../../../interfaces";
 import { Card, Title } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
+import { EstandaritzedArticles } from "../../../utils/strings";
+import { useEffect } from "react";
 
-var {height, width} = Dimensions.get('window');
+
+var { height, width } = Dimensions.get('window');
 
 export default function CodificatsScreen({ navigation, route }: any) {
 
@@ -16,7 +19,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
   const db = useSQLiteContext();
 
 
-  function getCodcity() {
+  function getCodscity() {
     try {
       const dataTC: ICodificats[] = db.getAllSync(`SELECT * from codificats WHERE id_city = ${id_cod}`);
       return dataTC;
@@ -26,9 +29,9 @@ export default function CodificatsScreen({ navigation, route }: any) {
     }
   }
 
-  function getInfraccionsCod (defaultCod:ICodificats|undefined) {
-    if (defaultCod){
-      const {id_city} = defaultCod;
+  function getInfraccionsCod(defaultCod: ICodificats | undefined) {
+    if (defaultCod) {
+      const { id_city } = defaultCod;
       try {
         const dataTC: OrdenancaStandard[] = db.getAllSync(`SELECT * from ${defaultCod.name_cod}`);
         return dataTC
@@ -38,47 +41,71 @@ export default function CodificatsScreen({ navigation, route }: any) {
       }
     }
     return []
-    }
+  }
 
-  const dataDB: ICodificats[] = getCodcity();
+  const dataDB: ICodificats[] = getCodscity();
 
-  const defaultCod: ICodificats | undefined = dataDB.find((i)=>i.is_main)
+  const defaultCod: ICodificats | undefined = dataDB.find((i) => i.is_main)
 
-  const infraccions:OrdenancaStandard[] = getInfraccionsCod(defaultCod)
-  
-  console.log(infraccions[0])
+  const infraccions: OrdenancaStandard[] = getInfraccionsCod(defaultCod)
 
   const { colors } = useTheme() as unknown as IAppTheme;
-  
+
+  useEffect(() => {
+    try {
+      infraccions.sort((a, b) => parseInt(a.articulo) - parseInt(b.articulo))
+    } catch (error) {
+      console.log("no s'han pogut ordenar les infraccions")
+    }
+  }, [infraccions])
+
+
   return (
 
 
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
 
       <FlatList
-        
-        data={dataDB}
-        renderItem={({ item }: ListRenderItemInfo<ICodificats>) => (
+
+        data={infraccions}
+        renderItem={({ item }: ListRenderItemInfo<OrdenancaStandard>) => (
           <Card
             style={[styles.card, { backgroundColor: colors.backgroundCard, }]}
             accessible
           >
-
-            <Card.Content style={[styles.cardContent]}>
-              <Title style={[styles.title, { color: colors.text }]}>
-                {item.field_1}
-              </Title>
+            <Card.Content style={[{ borderBottomColor: colors.borderHovertileBar }, styles.contentTitle]}>
+              <Text style={[styles.title, { color: colors.text }]}>
+                {item.norma}
+              </Text>
             </Card.Content>
-            <Card.Content style={styles.bottom}>
-              <Title style={[styles.title, { color: colors.text }]}>
-                {item.label_nav}
-              </Title>
+            <Card.Content style={styles.contentMiddle}>
+              <View style={styles.twoColumns}>
+                <Text style={[styles.middleText, { color: colors.text }]}>
+                  Article: {EstandaritzedArticles(item.articulo, item.apartado, item.opcion)}
+                </Text>
+                <Text style={[styles.middleText, { color: colors.text }]}>
+                  Punts: {item.puntos}
+                </Text>
+              </View>
+              <View style={styles.twoColumns}>
+                <Text style={[styles.middleText, { color: colors.text }]}>
+                  Calificació: {item.calificacion}
+                </Text>
+                <Text style={[styles.middleText, { color: colors.text }]}>
+                  Multa: {item.multa}
+                </Text>
+              </View>
+            </Card.Content>
+            <Card.Content style={[{ borderTopColor: colors.borderHovertileBar }, styles.ContentInfra]}>
+              <Text style={[{ marginTop: 10, color: colors.text },styles.textoInfra]}>
+                {item.texto}
+              </Text>
             </Card.Content>
           </Card >
         )}
-      // keyExtractor={(item: ICity) => `${item.id}`}
-      // numColumns={2}
-       contentContainerStyle={styles.flStyle}
+        keyExtractor={(item: OrdenancaStandard) => `${item.id}`}
+        // numColumns={2}
+        contentContainerStyle={styles.flStyle}
       >
       </FlatList >
 
@@ -88,26 +115,55 @@ export default function CodificatsScreen({ navigation, route }: any) {
   );
 }
 const styles = StyleSheet.create({
-  flStyle: {    
-    alignSelf:'stretch'
+  flStyle: {
+    alignSelf: 'stretch'
   },
   card: {
     marginTop: 7,
     width: width - 25,
     borderWidth: 3,
+
   },
   cardContent: {
-    alignItems:'center'
-  },
-  
-  bottom: {
-    borderTopWidth: 2,
     alignItems: 'center'
   },
+  contentTitle: {
+    marginTop: -4,
+    marginBottom: 5,
+    borderBottomWidth: 2,
+
+  },
+  ContentInfra: {
+    borderTopWidth: 2,
+    marginTop: 10,    
+  },
+  textoInfra:{
+    lineHeight:22,
+    textAlign:'justify'
+  },
   title: {
-    fontWeight: 600,
-    textTransform: 'capitalize', 
-    textAlign:'center'   
+    // fontSize:14,
+    fontWeight: 800,
+    textTransform: 'capitalize',
+    textAlign: 'center',
+    marginTop: -4,
+    marginBottom: 8,
+
+
+  },
+  contentMiddle: {
+    marginBottom: 0
+  },
+
+  middleText: {
+    marginTop: 5,
+  },
+  twoColumns: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 0,
+    marginRight: 0,
+    justifyContent: 'space-between',
   }
 });
 
