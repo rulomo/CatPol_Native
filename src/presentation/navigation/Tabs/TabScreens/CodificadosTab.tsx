@@ -1,5 +1,5 @@
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { View, Text, StyleSheet, Image, useColorScheme, ListRenderItemInfo, TouchableHighlight, Platform, TouchableOpacity } from 'react-native'
+import {  StyleSheet, Image, useColorScheme, ListRenderItemInfo, TouchableOpacity } from 'react-native'
 import { useSQLiteContext } from 'expo-sqlite';
 import { ICity } from '../../../../interfaces';
 import { FlatList } from 'react-native-gesture-handler';
