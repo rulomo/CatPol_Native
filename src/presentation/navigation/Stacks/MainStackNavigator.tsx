@@ -4,7 +4,6 @@ import MainDrawer from '../Drawer/MainDrawer';
 import Settings from '../screens/Settings';
 import Legal from '../screens/Legal';
 import About from '../screens/About';
-import ListCodCities from '../screens/CodificatsScreen';
 import CodificatsScreen from '../screens/CodificatsScreen';
 
 const Stack = createStackNavigator();

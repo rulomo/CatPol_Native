@@ -1,12 +1,15 @@
 
 
 import { useSQLiteContext } from "expo-sqlite";
-import { Button, View, Text, FlatList, ListRenderItemInfo, StyleSheet, Dimensions } from "react-native";
-import { ICodificats, IOrdenanca, OrdenancaStandard } from "../../../interfaces";
-import { Card, Title } from "react-native-paper";
+import { View, Text, FlatList, ListRenderItemInfo, StyleSheet, Dimensions } from "react-native";
+import { ICodificats, OrdenancaStandard } from "../../../interfaces";
+import { Card } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
 import { EstandaritzedArticles } from "../../../utils/strings";
-import { useEffect } from "react";
+import { useEffect, useReducer, useState } from "react";
+import DropDownPicker from "react-native-dropdown-picker";
+import { useInfraccions } from "../../../hooks/useInfraccions";
+
 
 
 var { height, width } = Dimensions.get('window');
@@ -16,8 +19,12 @@ export default function CodificatsScreen({ navigation, route }: any) {
 
   const { id: id_cod } = route.params.data;
 
+  const { data, loading, error, msgError }
+        = useInfraccions({id_cod:1});
+
   const db = useSQLiteContext();
 
+  console.log(data)
 
   function getCodscity() {
     try {
@@ -30,8 +37,8 @@ export default function CodificatsScreen({ navigation, route }: any) {
   }
 
   function getInfraccionsCod(defaultCod: ICodificats | undefined) {
+
     if (defaultCod) {
-      const { id_city } = defaultCod;
       try {
         const dataTC: OrdenancaStandard[] = db.getAllSync(`SELECT * from ${defaultCod.name_cod}`);
         return dataTC
@@ -43,12 +50,13 @@ export default function CodificatsScreen({ navigation, route }: any) {
     return []
   }
 
-  const dataDB: ICodificats[] = getCodscity();
+  const codsCiy: ICodificats[] = getCodscity();
 
-  const defaultCod: ICodificats | undefined = dataDB.find((i) => i.is_main)
+  const defaultCod: ICodificats | undefined = codsCiy.find((i) => i.is_main)
 
   const infraccions: OrdenancaStandard[] = getInfraccionsCod(defaultCod)
 
+  
   const { colors } = useTheme() as unknown as IAppTheme;
 
   useEffect(() => {
@@ -59,14 +67,49 @@ export default function CodificatsScreen({ navigation, route }: any) {
     }
   }, [infraccions])
 
+  useEffect(() => {
+    navigation.setOptions({
+      placeholder: "Cercar",
+      headerTitle: "",
+      headerSearchBarOptions: {
+        onChangeText: (text: any) => {
+          console.log(text.nativeEvent.text)
+        },
+        hideWhenScrolling: false,
+      }
+    })
+    return () => {
+    }
+  }, [navigation])
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState(codsCiy.map((cod)=>{return {label:cod.label_nav,value:cod.id}}));
 
   return (
 
 
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}        
+        placeholder={infraccions[0]?.norma||""}
+        // renderListItem={(props) =>
+        //   <View><Text>Hola</Text></View> 
+        //  }        
+        style={{borderWidth:3, 
+                marginTop:10, 
+                marginLeft:15,
+                marginBottom:10,
+                maxWidth:width-30,
+                backgroundColor:colors.backGroundTitleBar,
+        }}
+      />
       <FlatList
-
         data={infraccions}
         renderItem={({ item }: ListRenderItemInfo<OrdenancaStandard>) => (
           <Card
@@ -97,7 +140,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
               </View>
             </Card.Content>
             <Card.Content style={[{ borderTopColor: colors.borderHovertileBar }, styles.ContentInfra]}>
-              <Text style={[{ marginTop: 10, color: colors.text },styles.textoInfra]}>
+              <Text style={[{ marginTop: 10, color: colors.text }, styles.textoInfra]}>
                 {item.texto}
               </Text>
             </Card.Content>
@@ -108,9 +151,8 @@ export default function CodificatsScreen({ navigation, route }: any) {
         contentContainerStyle={styles.flStyle}
       >
       </FlatList >
+      {/* <Button onPress={() => navigation.goBack()} title="Go back home" /> */}
 
-      <Text style={{ color: `white` }}>This is a lista codificats per city screen</Text>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
     </View>
   );
 }
@@ -135,11 +177,11 @@ const styles = StyleSheet.create({
   },
   ContentInfra: {
     borderTopWidth: 2,
-    marginTop: 10,    
+    marginTop: 10,
   },
-  textoInfra:{
-    lineHeight:22,
-    textAlign:'justify'
+  textoInfra: {
+    lineHeight: 22,
+    textAlign: 'justify'
   },
   title: {
     // fontSize:14,

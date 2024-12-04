@@ -15,7 +15,7 @@ const AppDarkTheme: IAppTheme = {
         ...DefaultTheme.colors,
         text: '#f0f0f0',
         card: '#313131',       //old #50504c
-        border: '#9F4945',
+        border: '#f0f0f0',
         primary: '#f0f0f0',
         background: '#222', //old #696963
         
@@ -33,7 +33,6 @@ const AppDarkTheme: IAppTheme = {
         secondaryBlue: '#135b96',
         success: '#17977a',
         textButton: '#fff',
-
     },
     fonts: Platform.select({
         web: {
