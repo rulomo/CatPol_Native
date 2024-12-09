@@ -14,7 +14,7 @@ interface IState {
     error: boolean;
 }
 
-export const useDefaultCodificat = ({ id_city }: { id_city: number }) => {
+export const useCodificat = ({ id_city }: { id_city: number }) => {
     
     const db = useSQLiteContext();
 

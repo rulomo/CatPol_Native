@@ -7,11 +7,10 @@ import { useTheme } from "@react-navigation/native";
 
 import { useEffect, useRef, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useDefaultCodificat } from "../../../hooks";
 import useInfraccionsContext from "../../../contexts/InfraccionsContext";
 import { stringToArrayWords } from "../../../utils";
 import { FlatListInfraccions } from "../../components/FlatListInfraccions";
-import { ICodificats, OrdenancaStandard } from "../../../interfaces";
+import { ICodificats, IOrdenanca, OrdenancaStandard } from "../../../interfaces";
 
 
 var { height, width } = Dimensions.get('window');
@@ -20,18 +19,26 @@ export default function CodificatsScreen({ navigation, route }: any) {
   
   const { id: id_city } = route.params.data;
   
-  const {state:states}=useDefaultCodificat({id_city})
-  const { state, dispatch } = useInfraccionsContext();
   
+  const { state, dispatch } = useInfraccionsContext();
+  const {currentCodificat,infraccionsToShow,codificatsCity}:{
+    currentCodificat:ICodificats,infraccionsToShow:OrdenancaStandard,codificatsCity:ICodificats[]
+  } = state;
+  
+  
+   
   const { colors } = useTheme() as unknown as IAppTheme;
   
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState<any>();
+  // const [items, setItems] = useState<any>();
   const [valueSearch, setValueSearch] = useState<string>();
   
   const ref = useRef<any>(null);
   
+  useEffect(() => {
+    dispatch({ type: "load_default_infraccions", payload: id_city })}  
+  , [])
   
   useEffect(() => {
     const arrayStrings = stringToArrayWords(valueSearch, 3)
@@ -39,7 +46,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
       dispatch({ type: "filter_by_search", payload: arrayStrings })
   }, [valueSearch]);
 
-  useEffect(() => {
+    useEffect(() => {
     navigation.setOptions({
       placeholder: "Cercar",      
       headerSearchBarOptions: {          
@@ -58,20 +65,32 @@ export default function CodificatsScreen({ navigation, route }: any) {
 
   return (
 
-
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <DropDownPicker
+      listItemContainerStyle={{
+        backgroundColor:colors.borderCard,
+        maxWidth: width
+      }}
+      dropDownContainerStyle={{
+        backgroundColor:colors.background,
+        width:width-25, 
+        marginLeft:13,
+        borderWidth:3
+        
+      }}
+      listMode="MODAL"
+      textStyle={{color:colors.text}}
         open={open}
         value={value}
-        items={states.data.CodificatsCity?.map((cod: { label_nav: any; name_cod: any; }) => { return { label: cod.label_nav, value: cod.name_cod } })}
+        items={codificatsCity?.map((cod: { label_nav: any; name_cod: any; }) => { return { label: cod.label_nav, value: cod.name_cod } })}
         setOpen={setOpen}
         setValue={setValue}
-        // onSelectItem={(item) => {
-        //   dispatch({ type: "change_cod", payload: codificatsCity?.find(i => i.name_cod == item.value) })
-        //   ref?.current?.setText('');          
-        // }}
+        onSelectItem={(item) => {
+          dispatch({ type: "change_cod", payload: codificatsCity?.find((i) => i.name_cod == item.value) })
+          ref?.current?.setText('');          
+        }}
         // setItems={setItems}
-        placeholder={states.data?.infraccionsCodificat[0]?.norma || ""}
+        placeholder={"Llista de codificats disponibles"}
         // renderListItem={(props) =>
         //   <View><Text>Hola</Text></View> 
         //  }        
@@ -84,7 +103,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
           backgroundColor: colors.backGroundTitleBar,
         }}
       />
-      <FlatListInfraccions id_City={id_city} />
+      <FlatListInfraccions  />
 
 
     </View>

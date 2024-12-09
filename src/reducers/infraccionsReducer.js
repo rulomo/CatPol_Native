@@ -4,11 +4,11 @@ import { useSQLiteContext } from "expo-sqlite";
 
 
 export const initialState = {
+    codificatsCity:[],
     currentCodificat: {},
     infraccionsTotals: [],
     localInfraccions: [],
     infraccionsToShow: [],
-    infraccions: [], //Muestre infracciones vacias cargando la primera vez
     lastSearch: "",
     isLoading: true,
 };
@@ -50,7 +50,7 @@ export const infraccionsReducer = (state, action) => {
             // console.log("reset_state");
             // return initialState;
             break;      
-            
+                   
         case "load_default_infraccions":
             debugger
             const codificatsCity = getCodscity(payload);

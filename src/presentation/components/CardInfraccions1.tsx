@@ -1,14 +1,14 @@
-import { FC} from "react";
+import { FC } from "react";
 import { Dimensions, FlatList, Text, StyleSheet, View } from "react-native"
 
 import useInfraccionsContext from "../../contexts/InfraccionsContext";
 
 import { ICodificats, OrdenancaStandard } from "../../interfaces";
-import { EstandaritzedArticles, stringToArrayWords } from "../../utils";
+import { EstandaritzedArticles,standaritzedText, stringToArrayWords } from "../../utils";
 import { Card } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
+import HighlightText from "@sanar/react-native-highlight-text";
 
-import HighlightedText, { Highlight } from 'react-native-highlighter';
 
 interface Props {
     infraccio?: OrdenancaStandard;
@@ -50,12 +50,9 @@ export const CardInfraccions1: FC<Props> = (({ infraccio }) => {
 
     // const rows_modal: string[] = currentCodificat?.order_all_fields?.split(";");
 
-    const mainKeywords = new Highlight({
-        keywords: decodeURIComponent(state.lastSearch as unknown as string).split(','),
-        style: { color: colors.success, fontWeight: 800 },
-      });
+    const mainKeywords = decodeURIComponent(state.lastSearch as unknown as string).split(',')
 
-      return (
+    return (
         <Card
             style={[styles.card, { backgroundColor: colors.backgroundCard, }]}
             accessible
@@ -95,13 +92,13 @@ export const CardInfraccions1: FC<Props> = (({ infraccio }) => {
             </Card.Content>
             <Card.Content style={[{ borderTopColor: colors.borderHovertileBar }, styles.ContentInfra]}>
                 <Text style={[{ marginTop: 10, color: colors.text }, styles.textoInfra]}>
-                    {infraccio?.texto && infraccio.texto}
-                    {/* <HighlightedText 
-                        highlights={[mainKeywords]}
-                        caseSensitive={false}
-                    >
-                        {infraccio?.texto}
-                    </HighlightedText> */}
+                    {/* {infraccio?.texto && infraccio.texto} */}
+                    <HighlightText                        
+                        searchWords={mainKeywords}
+                        highlightStyle={{color:'#39ff14',fontWeight:'800'}} 
+                        sanitize ={standaritzedText}                        
+                        textToHighlight={infraccio?.texto || ""}                        
+                    />
                 </Text>
             </Card.Content>
         </Card >

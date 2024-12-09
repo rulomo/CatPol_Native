@@ -11,16 +11,14 @@ let { height, width } = Dimensions.get('window');
 
 
 
-export const FlatListInfraccions=({id_city}) => {
+export const FlatListInfraccions=({}) => {
 
   const { state, dispatch } = useInfraccionsContext();
   const {infraccionsToShow:infraccions, currentCodificat} = state;
   
-  // useEffect(() => {    
-  //   dispatch({ type: "load_default_infraccions", payload: id_city }) 
-  // }, [])
     
      return (
+      
         <FlatList
         data={infraccions}
         renderItem={({ item }: ListRenderItemInfo<OrdenancaStandard>) => (
