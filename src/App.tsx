@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import useSettingsContext, { SettingsContextProvider } from './contexts/SettingsContext';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
+import { InfraccionsContextProvider } from './contexts/InfraccionsContext';
 
 const getDataTheme = async () => {
   try {
@@ -51,13 +52,15 @@ export default function App() {
   return (
     <PaperProvider theme={paperTheme}>
       <SQLiteProvider databaseName="dba.db" assetSource={{ assetId: require('../assets/dba.db') }}>
-        <SettingsContextProvider>
-          <NavigationContainer
-            theme={selectTheme}
-          >
-            <MainStackNavigator />
-          </NavigationContainer>
-        </SettingsContextProvider>
+        <InfraccionsContextProvider>
+          <SettingsContextProvider>
+            <NavigationContainer
+              theme={selectTheme}
+            >
+              <MainStackNavigator />
+            </NavigationContainer>
+          </SettingsContextProvider>
+        </InfraccionsContextProvider>
       </SQLiteProvider>
     </PaperProvider>
 

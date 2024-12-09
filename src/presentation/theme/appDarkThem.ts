@@ -17,8 +17,7 @@ const AppDarkTheme: IAppTheme = {
         card: '#313131',       //old #50504c
         border: '#f0f0f0',
         primary: '#f0f0f0',
-        background: '#222', //old #696963
-        
+        background: '#222',//old #696963        
         drawerText: '#f0f0f0ad',
         borderCardActive: '#313131',
         borderCard: '#444',
@@ -31,7 +30,7 @@ const AppDarkTheme: IAppTheme = {
         notification: '#FF453A',
         primaryBlue: '#2196F3',
         secondaryBlue: '#135b96',
-        success: '#17977a',
+        success: '#15fa00',
         textButton: '#fff',
     },
     fonts: Platform.select({
