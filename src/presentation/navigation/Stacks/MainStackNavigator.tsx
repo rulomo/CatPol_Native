@@ -21,7 +21,7 @@ export const MainStackNavigator = () => {
         }}
       />
       <Stack.Screen name="Settings" options={{ title: "Configuració" }} component={Settings} />
-      <Stack.Screen name="Codificados" options={{ title: "Codificados" }} component={CodificatsScreen} />
+      <Stack.Screen name="Codificados" options={{ title: "Codificats" }} component={CodificatsScreen} />
       <Stack.Screen name="Legal" options={{ title: "Legal" }} component={Legal} />
       <Stack.Screen name="About" options={{ title: "A sobre de..." }} component={About} />
     </Stack.Navigator>

@@ -6,6 +6,7 @@ import { useTheme } from "@react-navigation/native";
 import { EstandaritzedArticles } from "../../utils";
 import { FC, useEffect } from "react";
 import { CardInfraccions1 } from "./CardInfraccions1";
+import { CardInfraccions2 } from "./CardInfraccions2";
 
 let { height, width } = Dimensions.get('window');
 
@@ -15,14 +16,16 @@ export const FlatListInfraccions=({}) => {
 
   const { state, dispatch } = useInfraccionsContext();
   const {infraccionsToShow:infraccions, currentCodificat} = state;
-  
+    
     
      return (
       
         <FlatList
         data={infraccions}
         renderItem={({ item }: ListRenderItemInfo<OrdenancaStandard>) => (
-         <CardInfraccions1 infraccio={item}  /> 
+          currentCodificat.template===1?
+         <CardInfraccions1 infraccio={item}  /> :
+         <CardInfraccions2 infraccio={item as any}  /> 
         )}
         keyExtractor={(item: OrdenancaStandard) => `${item.id}`}
         // numColumns={2}

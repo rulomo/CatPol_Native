@@ -36,4 +36,5 @@ type IColors = {
     borderHovertileBar: string,
     backGroundTitleBar: string,
     borderTitleBar: string,
+    highLightText:string,
 }

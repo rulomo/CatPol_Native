@@ -18,6 +18,7 @@ const AppDarkTheme: IAppTheme = {
         border: '#f0f0f0',
         primary: '#f0f0f0',
         background: '#222',//old #696963        
+        
         drawerText: '#f0f0f0ad',
         borderCardActive: '#313131',
         borderCard: '#444',
@@ -30,8 +31,9 @@ const AppDarkTheme: IAppTheme = {
         notification: '#FF453A',
         primaryBlue: '#2196F3',
         secondaryBlue: '#135b96',
-        success: '#15fa00',
+        success: '#3e8b37',
         textButton: '#fff',
+        highLightText:'#39ff14'
     },
     fonts: Platform.select({
         web: {

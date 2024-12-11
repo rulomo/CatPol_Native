@@ -33,6 +33,7 @@ const AppLightTheme: IAppTheme = {
         secondaryBlue: '#135b96',
         success: '#17977a',
         textButton: '#fff',
+        highLightText:'#0004ff'
     },
     fonts: Platform.select({
         web: {

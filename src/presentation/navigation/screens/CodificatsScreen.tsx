@@ -17,12 +17,14 @@ var { height, width } = Dimensions.get('window');
 
 export default function CodificatsScreen({ navigation, route }: any) {
   
-  const { id: id_city } = route.params.data;
+  const { id: id_city, name_city }:{
+    id:number,name_city:string
+  } = route.params.data;
   
   
   const { state, dispatch } = useInfraccionsContext();
   const {currentCodificat,infraccionsToShow,codificatsCity}:{
-    currentCodificat:ICodificats,infraccionsToShow:OrdenancaStandard,codificatsCity:ICodificats[]
+    currentCodificat:ICodificats,infraccionsToShow:OrdenancaStandard[],codificatsCity:ICodificats[]
   } = state;
   
   
@@ -37,7 +39,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
   const ref = useRef<any>(null);
   
   useEffect(() => {
-    dispatch({ type: "load_default_infraccions", payload: id_city })}  
+    dispatch({ type: "load_default_infraccions", payload: id_city })}      
   , [])
   
   useEffect(() => {
@@ -47,38 +49,53 @@ export default function CodificatsScreen({ navigation, route }: any) {
   }, [valueSearch]);
 
     useEffect(() => {
-    navigation.setOptions({
-      placeholder: "Cercar",      
-      headerSearchBarOptions: {          
+    navigation.setOptions({      
+      headerTitle: `${name_city?.charAt(0).toUpperCase() + name_city?.slice(1)}`,      
+      headerSearchBarOptions: { 
+
         placeholder: "Cercar...",
         onChangeText: (event: any) => {
           setValueSearch(event.nativeEvent.text)
-        },
-        hideWhenScrolling: false,
+        },        
         ref,
-      }
-    })
+      
+    }})
     return () => {
     }
   }, [navigation])
 
-
+  
   return (
 
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      {stringToArrayWords(valueSearch, 3).length>0 && 
+      <Text style={{marginBottom:-10,color:colors.primaryBlue}}>Numero infraccions trobades:  
+        {` ${infraccionsToShow?.length}`}
+      </Text>}
       <DropDownPicker
       listItemContainerStyle={{
         backgroundColor:colors.borderCard,
-        maxWidth: width
+        maxWidth: width,        
       }}
+      modalContentContainerStyle={{backgroundColor:colors.backgroundCard}}
+      customItemLabelStyle={{margin:15}}
       dropDownContainerStyle={{
         backgroundColor:colors.background,
         width:width-25, 
         marginLeft:13,
-        borderWidth:3
-        
-      }}
+        borderWidth:3,
+        marginTop:15,
+        borderRadius:15,        
+        borderColor:colors.text        
+      }}      
+      language="ES"
+      itemSeparator={true}
+      itemSeparatorStyle={{backgroundColor:colors.text}}
+      searchable={true}
+      searchPlaceholder="Cercar per codificat..."
+      searchWithRegionalAccents={true}
       listMode="MODAL"
+      modalAnimationType="slide"
       textStyle={{color:colors.text}}
         open={open}
         value={value}
@@ -87,10 +104,10 @@ export default function CodificatsScreen({ navigation, route }: any) {
         setValue={setValue}
         onSelectItem={(item) => {
           dispatch({ type: "change_cod", payload: codificatsCity?.find((i) => i.name_cod == item.value) })
-          ref?.current?.setText('');          
+          ref?.current?.setText("");
         }}
         // setItems={setItems}
-        placeholder={"Llista de codificats disponibles"}
+        placeholder={"Llista de codificats"}
         // renderListItem={(props) =>
         //   <View><Text>Hola</Text></View> 
         //  }        

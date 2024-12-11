@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Dimensions, FlatList, Text, StyleSheet, View } from "react-native"
 
 import useInfraccionsContext from "../../contexts/InfraccionsContext";
@@ -16,7 +16,7 @@ interface Props {
 
 let { height, width } = Dimensions.get('window');
 
-export const CardInfraccions1: FC<Props> = (({ infraccio }) => {
+export const CardInfraccions1: FC<Props> = memo(({ infraccio }) => {
 
     const { state, dispatch } = useInfraccionsContext();
 
@@ -95,7 +95,7 @@ export const CardInfraccions1: FC<Props> = (({ infraccio }) => {
                     {/* {infraccio?.texto && infraccio.texto} */}
                     <HighlightText                        
                         searchWords={mainKeywords}
-                        highlightStyle={{color:'#39ff14',fontWeight:'800'}} 
+                        highlightStyle={{color:colors.highLightText,fontWeight:'800'}} 
                         sanitize ={standaritzedText}                        
                         textToHighlight={infraccio?.texto || ""}                        
                     />

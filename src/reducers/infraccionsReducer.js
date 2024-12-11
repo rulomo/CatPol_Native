@@ -30,12 +30,38 @@ export const infraccionsReducer = (state, action) => {
         }
     }
 
-    function getInfraccionsCod({ name_cod }) {
+    function getInfraccionsCod ({ name_cod, template }) {
         if (name_cod) {
             try {
                 const dataTC = db.getAllSync(`SELECT * from ${name_cod}`);
+                debugger
                 dataTC.sort((a, b) => parseInt(a.articulo) - parseInt(b.articulo));
-                return dataTC
+                if (template === 2 && dataTC?.length>0) {
+                    let map = new Map();
+                    dataTC.map((infraccio) => {
+                        infraccio.texto =
+                            infraccio?.parrafo || infraccio?.parrafo_2;
+                        let existMap = map.get(infraccio?.articulo);
+                        if (existMap) {
+                            existMap.texto =
+                                existMap.texto +
+                                ` ## ${infraccio?.parrafo || infraccio?.parrafo_2}`;
+                        } else {
+                            delete infraccio.parrafo;
+                            delete infraccio.parrafo_2;
+                            map.set(infraccio.articulo, infraccio);
+                        }
+                    });
+                    let infraccions = [];
+                    map.forEach((value, key) => {
+                        infraccions.push(value);
+                    });
+                    
+                    return infraccions;
+                }else{
+
+                    return dataTC
+                }
             } catch (error) {
                 console.log(error)
                 return []
@@ -52,7 +78,7 @@ export const infraccionsReducer = (state, action) => {
             break;      
                    
         case "load_default_infraccions":
-            debugger
+            
             const codificatsCity = getCodscity(payload);
             const defaultCod = codificatsCity.find((i) => i.is_main)
             const infraccions = getInfraccionsCod(defaultCod)
