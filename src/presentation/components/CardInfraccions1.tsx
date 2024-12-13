@@ -1,10 +1,10 @@
 import { FC, memo } from "react";
-import { Dimensions, FlatList, Text, StyleSheet, View } from "react-native"
+import { Dimensions, Text, StyleSheet, View } from "react-native"
 
 import useInfraccionsContext from "../../contexts/InfraccionsContext";
 
-import { ICodificats, OrdenancaStandard } from "../../interfaces";
-import { EstandaritzedArticles,standaritzedText, stringToArrayWords } from "../../utils";
+import {  OrdenancaStandard } from "../../interfaces";
+import { EstandaritzedArticles,standaritzedText  } from "../../utils";
 import { Card } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
 import HighlightText from "@sanar/react-native-highlight-text";

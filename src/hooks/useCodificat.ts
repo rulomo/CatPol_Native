@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ICodificats, IOrdenanca, Iv_tables, OrdenancaStandard } from "../interfaces";
+import { ICodificats, OrdenancaStandard } from "../interfaces";
 import { useSQLiteContext } from "expo-sqlite";
 
 interface IstateData {
@@ -31,7 +31,7 @@ export const useCodificat = ({ id_city }: { id_city: number }) => {
     });
 
     function getCodscity() {
-        debugger
+        
         try {
             const dataTC: ICodificats[] = db.getAllSync(`SELECT * from codificats WHERE id_city = ${id_city}`);
             return dataTC;
@@ -113,8 +113,7 @@ export const useCodificat = ({ id_city }: { id_city: number }) => {
 
 
 
-    useEffect(() => {
-        debugger
+    useEffect(() => {        
         let isMounted = true
         const checks = async () => {
             const codificatsCity = getCodscity();

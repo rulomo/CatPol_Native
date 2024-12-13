@@ -33,8 +33,7 @@ export const infraccionsReducer = (state, action) => {
     function getInfraccionsCod ({ name_cod, template }) {
         if (name_cod) {
             try {
-                const dataTC = db.getAllSync(`SELECT * from ${name_cod}`);
-                debugger
+                const dataTC = db.getAllSync(`SELECT * from ${name_cod}`);                
                 dataTC.sort((a, b) => parseInt(a.articulo) - parseInt(b.articulo));
                 if (template === 2 && dataTC?.length>0) {
                     let map = new Map();
@@ -57,10 +56,10 @@ export const infraccionsReducer = (state, action) => {
                         infraccions.push(value);
                     });
                     
-                    return infraccions;
+                    return infraccions?.map(i=>({infraccio:i,template}));
                 }else{
 
-                    return dataTC
+                    return dataTC?.map(i=>({infraccio:i,template}))
                 }
             } catch (error) {
                 console.log(error)
@@ -75,14 +74,11 @@ export const infraccionsReducer = (state, action) => {
         case "reset":
             // console.log("reset_state");
             // return initialState;
-            break;      
-                   
-        case "load_default_infraccions":
-            
+            break;                         
+        case "load_default_infraccions":            
             const codificatsCity = getCodscity(payload);
             const defaultCod = codificatsCity.find((i) => i.is_main)
             const infraccions = getInfraccionsCod(defaultCod)
-
             return {
                 ...state,
                 codificatsCity: codificatsCity,
@@ -92,7 +88,6 @@ export const infraccionsReducer = (state, action) => {
                 localInfraccions: deepClone(infraccions),
                 isLoading: false,
             };
-
         case "load_infraccions":
             console.log("load_infraccions");
             return {
@@ -120,7 +115,7 @@ export const infraccionsReducer = (state, action) => {
             const arrayFilter = payload;
             let param = encodeURIComponent(arrayFilter);
             if (state.localInfraccions.length && arrayFilter?.length) {
-                let infraccions = state.localInfraccions.filter((infraccio) =>
+                let infraccions = state.localInfraccions.filter(({infraccio}) =>
                     arrayFilter.every((element) =>
                         standaritzedText(infraccio.texto).includes(
                             standaritzedText(element)
@@ -140,8 +135,6 @@ export const infraccionsReducer = (state, action) => {
                         //     standaritzedText(element)
                         // )
                         // END PENALS ///
-
-
                     )
                 );
                 return {
