@@ -1,5 +1,5 @@
 
-import { deepClone, standaritzedText } from "../utils";
+import { capitalizedText, deepClone } from "../utils";
 import { useSQLiteContext } from "expo-sqlite";
 
 
@@ -9,6 +9,8 @@ export const initialState = {
     infraccionsTotals: [],
     localInfraccions: [],
     infraccionsToShow: [],
+    select1:[],
+    select2:[],    
     lastSearch: "",
     isLoading: true,
 };
@@ -68,6 +70,14 @@ export const infraccionsReducer = (state, action) => {
         }
         return []
     }
+    
+    function getItemsSelect(infraccions,select){                
+            let selectsSet = new Set()
+            infraccions?.every (({infraccio})=>selectsSet.add(capitalizedText(infraccio[`${select}`])))
+            const selectsArray = [...selectsSet];
+            const customSelects = selectsArray.map((item)=>{return { label: item, value: item}})           
+            return customSelects
+    }
 
     switch (type) {
 
@@ -79,6 +89,8 @@ export const infraccionsReducer = (state, action) => {
             const codificatsCity = getCodscity(payload);
             const defaultCod = codificatsCity.find((i) => i.is_main)
             const infraccions = getInfraccionsCod(defaultCod)
+            const select1 = getItemsSelect(infraccions,defaultCod?.select_1)
+            const select2 = getItemsSelect(infraccions,defaultCod?.select_2)            
             return {
                 ...state,
                 codificatsCity: codificatsCity,
@@ -86,6 +98,8 @@ export const infraccionsReducer = (state, action) => {
                 infraccionsTotals: deepClone(infraccions),
                 infraccionsToShow: deepClone(infraccions),
                 localInfraccions: deepClone(infraccions),
+                select1:select1,
+                select2:select2,
                 isLoading: false,
             };
         case "load_infraccions":
@@ -101,13 +115,15 @@ export const infraccionsReducer = (state, action) => {
             console.log("change_cod");
             const newCodificatsCity = getCodscity(payload?.id_city);
             const newCod = newCodificatsCity.find((i) => i?.name_cod == payload.name_cod)
-            const newInfraccions = getInfraccionsCod(newCod)
+            const newInfraccions=getInfraccionsCod(newCod)            
             return {
                 ...state,
                 currentCodificat: newCod,
                 infraccionsTotals: deepClone(newInfraccions),
                 infraccionsToShow: deepClone(newInfraccions),
                 localInfraccions: deepClone(newInfraccions),
+                select1:getItemsSelect(newInfraccions,newCod?.select_1),
+                select2:getItemsSelect(newInfraccions,newCod?.select_2),
                 isLoading: false,
             };
         case "filter_by_search":

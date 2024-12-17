@@ -6,9 +6,9 @@ import { View, Text, FlatList, ListRenderItemInfo, StyleSheet, Dimensions } from
 import { useTheme } from "@react-navigation/native";
 
 import { useEffect, useRef, useState } from "react";
-import DropDownPicker from "react-native-dropdown-picker";
+import DropDownPicker, { ItemType, ValueType } from "react-native-dropdown-picker";
 import useInfraccionsContext from "../../../contexts/InfraccionsContext";
-import { stringToArrayWords } from "../../../utils";
+import { capitalizedText, stringToArrayWords } from "../../../utils";
 import { FlatListInfraccions } from "../../components/FlatListInfraccions";
 import { ICodificats, IOrdenanca, OrdenancaStandard } from "../../../interfaces";
 
@@ -23,8 +23,8 @@ export default function CodificatsScreen({ navigation, route }: any) {
 
 
   const { state, dispatch } = useInfraccionsContext();
-  const { currentCodificat, infraccionsToShow,infraccionsTotals, codificatsCity }: {
-    currentCodificat: ICodificats,infraccionsTotals:OrdenancaStandard[], infraccionsToShow: OrdenancaStandard[], codificatsCity: ICodificats[]
+  const { currentCodificat, infraccionsToShow, select1, select2, codificatsCity }: {
+    currentCodificat: ICodificats, select1: ItemType<ValueType>[], select2: ItemType<ValueType>[], infraccionsToShow: OrdenancaStandard[], codificatsCity: ICodificats[]
   } = state;
 
 
@@ -33,6 +33,10 @@ export default function CodificatsScreen({ navigation, route }: any) {
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [open1, setOpen1] = useState(false);
+  const [value1, setValue1] = useState(null);
+  const [open2, setOpen2] = useState(false);
+  const [value2, setValue2] = useState(null);
   // const [items, setItems] = useState<any>();
   const [valueSearch, setValueSearch] = useState<string>();
 
@@ -40,6 +44,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
 
   useEffect(() => {
     dispatch({ type: "load_default_infraccions", payload: id_city })
+    console.log(select1)
   }
     , [])
 
@@ -50,7 +55,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
   }, [valueSearch]);
 
   useEffect(() => {
-   
+
     navigation.setOptions({
 
       headerTitle: () => <DropDownPicker
@@ -87,12 +92,12 @@ export default function CodificatsScreen({ navigation, route }: any) {
           dispatch({ type: "change_cod", payload: codificatsCity?.find((i) => i.name_cod == item.value) })
           ref?.current?.setText("");
         }}
-        placeholder={`Llista de codificats ${name_city?.charAt(0).toUpperCase() + name_city?.slice(1)}`}
+        placeholder={`Llista de codificats ${capitalizedText(name_city)}`}
         style={{
-          borderWidth: 3,
+          borderWidth: 0.5,
           marginTop: 10,
           width: width - 110,
-          backgroundColor: colors.backGroundTitleBar,
+          backgroundColor: colors.borderCard,
           minHeight: 40
         }}
       />
@@ -108,20 +113,10 @@ export default function CodificatsScreen({ navigation, route }: any) {
     })
     return () => {
     }
-  }, [navigation,value])
+  }, [navigation, open, value])
 
-
-  const itemsForSelect1 = ()=>{
-    debugger
-    let items = new Set()
-    let select1 = currentCodificat.select_2
-    infraccionsTotals?.map(({infraccio})=>{ 
-      debugger
-        items.add(infraccio[`${select1}`])
-    })
-    
-  }
-
+ 
+ 
   return (
 
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -130,7 +125,7 @@ export default function CodificatsScreen({ navigation, route }: any) {
           {` ${infraccionsToShow?.length}`}
         </Text>}
 
-      <DropDownPicker
+      {select1.length && <DropDownPicker
         listItemContainerStyle={{
           backgroundColor: colors.borderCard,
           maxWidth: width,
@@ -155,14 +150,14 @@ export default function CodificatsScreen({ navigation, route }: any) {
         listMode="MODAL"
         modalAnimationType="slide"
         textStyle={{ color: colors.text }}
-        open={open}
-        value={value}
-        items={codificatsCity?.map((cod: { label_nav: any; name_cod: any; }) => { return { label: cod.label_nav, value: cod.name_cod } })}
-        setOpen={setOpen}
-        setValue={setValue}
+        open={open1}
+        value={value1}
+        items={select1}
+        setOpen={setOpen1}
+        setValue={setValue1}
         onSelectItem={(item) => {
-          dispatch({ type: "change_cod", payload: codificatsCity?.find((i) => i.name_cod == item.value) })
-          ref?.current?.setText("");
+          // dispatch({ type: "change_cod", payload: codificatsCity?.find((i) => i.name_cod == item.value) })
+          // ref?.current?.setText("");
         }}
         // setItems={setItems}
         placeholder={`${currentCodificat?.label_select_1}`}
@@ -171,21 +166,21 @@ export default function CodificatsScreen({ navigation, route }: any) {
         //  }        
 
         style={{
-          borderWidth: 3,
+          borderWidth: 1,
           marginTop: 15,
           marginLeft: 15,
           marginBottom: 4,
           maxWidth: width - 30,
-          backgroundColor: colors.backGroundTitleBar,
+          backgroundColor: colors.backgroundCard,
           minHeight: 30
         }}
 
       />
 
+      }
 
-
-
-      <DropDownPicker
+      
+      {select2.length && <DropDownPicker
         listItemContainerStyle={{
           backgroundColor: colors.borderCard,
           maxWidth: width,
@@ -210,14 +205,14 @@ export default function CodificatsScreen({ navigation, route }: any) {
         listMode="MODAL"
         modalAnimationType="slide"
         textStyle={{ color: colors.text }}
-        open={open}
-        value={value}
-        items={codificatsCity?.map((cod: { label_nav: any; name_cod: any; }) => { return { label: cod.label_nav, value: cod.name_cod } })}
-        setOpen={setOpen}
-        setValue={setValue}
+        open={open2}
+        value={value2}
+        items={select2}
+        setOpen={setOpen2}
+        setValue={setValue2}
         onSelectItem={(item) => {
-          dispatch({ type: "change_cod", payload: codificatsCity?.find((i) => i.name_cod == item.value) })
-          ref?.current?.setText("");
+          // dispatch({ type: "change_cod", payload: codificatsCity?.find((i) => i.name_cod == item.value) })
+          // ref?.current?.setText("");
         }}
         // setItems={setItems}
         placeholder={`${currentCodificat?.label_select_2}`}
@@ -226,15 +221,15 @@ export default function CodificatsScreen({ navigation, route }: any) {
         //  }        
 
         style={{
-          borderWidth: 3,
-          marginTop: -6,
+          borderWidth: 1,
+          marginTop: -4,
           marginLeft: 15,
           marginBottom: 10,
           maxWidth: width - 30,
-          backgroundColor: colors.backGroundTitleBar,
+          backgroundColor: colors.backgroundCard,
           minHeight: 30
         }}
-      />
+      />}
       <FlatListInfraccions />
 
 

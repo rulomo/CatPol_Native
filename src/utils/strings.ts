@@ -13,6 +13,11 @@ export const EstandaritzedArticles = (article: any, apartado: any, opcion: any,)
 
 }
 
+export const capitalizedText  = (str ="") =>{
+  str = str.toString().toLowerCase();  
+  return String(str).charAt(0).toUpperCase() + String(str).slice(1)
+}
+
 //Tranforma texto en mayúsculas i sin acentos
 export const standaritzedText = (str = "") => {
   str = str.toString();

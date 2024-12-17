@@ -54,8 +54,11 @@ export const CardInfraccions1: FC<Props> = memo(({ infraccio }) => {
 
     return (
         <Card
+            mode="outlined"
             style={[styles.card, { backgroundColor: colors.backgroundCard, }]}
             accessible
+            onPress={(i)=>{alert(infraccio?.articulo)}}
+
         >
             <Card.Content style={[{ borderBottomColor: colors.borderHovertileBar }, styles.contentTitle]}>
                 <Text style={[styles.title, { color: colors.text }]}>
@@ -197,7 +200,7 @@ const styles = StyleSheet.create({
     card: {
         marginTop: 7,
         width: width - 25,
-        borderWidth: 3,
+        // borderWidth: 2,
 
     },
     cardContent: {

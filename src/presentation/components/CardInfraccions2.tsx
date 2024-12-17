@@ -59,8 +59,10 @@ export const CardInfraccions2: FC<Props> = (({ infraccio }) => {
     return (
 
         <Card
+            mode="outlined"
             style={[styles.card, { backgroundColor: colors.backgroundCard, }]}
             accessible
+            onPress={(i)=>{alert(infraccio?.articulo)}}
         >
             {infraccio?.norma &&
                 <Card.Content style={[{ borderBottomColor: colors.borderHovertileBar }, styles.contentTitle]}>
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
     card: {
         marginTop: 7,
         width: width - 25,
-        borderWidth: 3,
+        // borderWidth: 2,
     },  
     contentTitle: {
         marginTop: 0,
